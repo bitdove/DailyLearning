@@ -67,3 +67,15 @@ float magnitude(const Point3d* _this){
     ```cpp
     extern magnitude__7Point3dFv(register Point3d* const this);
     ```
+经此三步，这个函数的转换就完成了。之后，每个调用操作也会被转换。比如：
+```cpp
+Point3d obj;
+Point3d* ptr = &obj;
+obj.magnitude();
+ptr->magnitude();
+```
+以上两个调用操作，就会被分别转换为：
+```cpp
+magnitude__7Point3dFv(&obj);
+magnitude__7Point3dFv(ptr);
+```
