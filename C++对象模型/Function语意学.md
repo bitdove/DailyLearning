@@ -52,7 +52,7 @@ float magnitude(const Point3d* _this){
         ```cpp
         Point3d::magnitude(const Point3d* const this)
         ```
-    > 即添加一个指向常量的指针常量。
+    > 即添加一个指向常量的指针常量this。
 2. 把每一个对非静态数据成员的存取操作改成通过this指针来存取：
     ```cpp
     {
