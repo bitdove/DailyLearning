@@ -61,6 +61,22 @@ Singleton_3* Singleton_3::m_singleton_object = nullptr;
 pthread_mutex_t Singleton_3::m_mutex = PTHREAD_MUTEX_INITIALIZER;
 /******************多线程Double-Check单例类实现结束****************/
 
+//Singleton_1, Singleton_2, Singleton_3都属于懒汉式单例模式，即需要的时候才实例化，初始化的时候是nullptr。这种需要处理线程安全问题。
+
+//还有一种饿汉式单例模式，它是初始化就实例化，故需要提前占用系统资源,但它天然线程安全。
+/********************饿汉式单例模式实现开始*********************/
+class Singleton_4{
+public:
+    static Singleton_4* GetSingletonObject(){
+        return m_singleton_object;
+    }
+private:
+    Singleton_4() = default;
+    static Singleton_4* m_singleton_object;
+};
+Singleton_4* Singleton_4::m_singleton_object = new Singleton_4();
+/********************饿汉式单例模式实现结束*********************/
+
 void* thread_1_fun(void* arg){
     Singleton_1* s1 = Singleton_1::GetSingletonObject();
     std::cout << s1 << std::endl;
