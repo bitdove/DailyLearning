@@ -1,11 +1,15 @@
 #include <iostream>
+#include <pthread.h>
+#include <unistd.h>
 
 /**********************单线程单例类的实现**************************/
 class Singleton_1{
 public:
     static Singleton_1* GetSingletonObject(){
-        if(m_singleton_object == nullptr)
+        if(m_singleton_object == nullptr){
+            sleep(2);//为了测试Singleton_1在多线程下可能创建多个实例
             m_singleton_object = new Singleton_1();
+        }
         return m_singleton_object;
     }
 private:
@@ -20,8 +24,9 @@ class Singleton_2{
 public:
     static Singleton_2* GetSingletonObject(){
         pthread_mutex_lock(&m_mutex);
-        if(m_singleton_object == nullptr)
+        if(m_singleton_object == nullptr){
             m_singleton_object = new Singleton_2();
+        }
         pthread_mutex_unlock(&m_mutex);
         return m_singleton_object;
     }
@@ -40,8 +45,9 @@ public:
     static Singleton_3* GetSingletonObject(){
         if(m_singleton_object == nullptr){
             pthread_mutex_lock(&m_mutex);
-            if(m_singleton_object == nullptr)
+            if(m_singleton_object == nullptr){
                 m_singleton_object = new Singleton_3();
+            }
             pthread_mutex_unlock(&m_mutex);
         }
         return m_singleton_object;
@@ -55,11 +61,30 @@ Singleton_3* Singleton_3::m_singleton_object = nullptr;
 pthread_mutex_t Singleton_3::m_mutex = PTHREAD_MUTEX_INITIALIZER;
 /******************多线程Double-Check单例类实现结束****************/
 
+void* thread_1_fun(void* arg){
+    Singleton_1* s1 = Singleton_1::GetSingletonObject();
+    std::cout << s1 << std::endl;
+}
+
+void* thread_2_fun(void* arg){
+    Singleton_1* s2 = Singleton_1::GetSingletonObject();
+    std::cout << s2 << std::endl;
+}
+
+void* thread_3_fun(void* arg){
+    Singleton_1* s3 = Singleton_1::GetSingletonObject();
+    std::cout << s3 << std::endl;
+}
+
 
 int main(){
-    Singleton* s1 = Singleton::GetSingletonObject();
-    Singleton* s2 = Singleton::GetSingletonObject();
-    if(s1 == s2)
-        std::cout << "s1 and s2 are same instance" << std::endl;
+    pthread_t thread_1, thread_2, thread_3;
+    pthread_create(&thread_1, NULL, &thread_1_fun, NULL);
+    pthread_create(&thread_2, NULL, &thread_2_fun, NULL);
+    pthread_create(&thread_3, NULL, &thread_3_fun, NULL);
+    pthread_join(thread_1, NULL);
+    pthread_join(thread_2, NULL);
+    pthread_join(thread_3, NULL);
+
     return 0;
 }
