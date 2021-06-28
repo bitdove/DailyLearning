@@ -79,3 +79,36 @@ ptr->magnitude();
 magnitude__7Point3dFv(&obj);
 magnitude__7Point3dFv(ptr);
 ```
+
+## Virtual Functions
+
+如果magnitude()是一个虚函数，那么以下调用：
+```cpp
+ptr->magnitude()
+```
+就会被内部转化为：
+```cpp
+(* ptr->vptr[1])(ptr);
+```
+- 整体其实是通过函数指针调用magnitude()函数；
+- vptr是编译器产生的指针，指向虚表；
+- 1是虚表slot的索引值，关联到magnitude()函数；
+- 第二个ptr表示this指针。
+
+## Static Member Functions
+
+静态成员函数的主要特性是它没有this指针。因为它没有this指针，所以静态成员函数有以下特点：
+- 它不能直接操作类中的非静态成员；
+- 它不能是const、volatile或virtual的；
+- 它不需要经过类的对象来调用（尽管很多时候我们仍是这样调用它）。
+
+如果magnitude()是一个静态成员函数，那么以下调用：
+```cpp
+obj.magnitude();
+ptr->magnitude();
+```
+会被转换为一般的非成员函数调用，像这样：
+```cpp
+magnitude__7Point3dSFv();
+```
+> 由于缺乏this指针，所以静态成员函数**差不多**等同于非成员函数。
