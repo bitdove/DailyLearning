@@ -21,6 +21,7 @@ public:
     ~Point2d();
     Point2d& mult(float);
     float y() const;
+    virtual int fun() {}
 protected:
     float _y;
 };
