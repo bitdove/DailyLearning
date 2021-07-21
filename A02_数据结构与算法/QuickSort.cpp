@@ -8,7 +8,7 @@ void QuickSort(std::vector<int> &arr, int left, int right){
     int i = left;
     int j = right;
     while(i < j){
-        while(i < j && arr[j] >= arr[left])  --j;
+        while(i < j && arr[j] > arr[left])  --j;
         while(i < j && arr[i] <= arr[left])  ++i;
         std::swap(arr[i], arr[j]);
     }
