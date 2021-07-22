@@ -19,16 +19,22 @@ void QuickSort(std::vector<int> &arr, int left, int right){
 }
 
 int main(){
-    std::vector<int> vec;
+    std::vector<int> arr;
     int num;
+
+    std::cout << "Enter    Datas: ";
     while(std::cin >> num)
-        vec.push_back(num);
-    for(auto e : vec)
+        arr.push_back(num);
+
+    std::cout << "Original Datas: ";
+    for(auto e : arr)
         std::cout << e << " ";
     std::cout << std::endl;
 
-    QuickSort(vec, 0, vec.size()-1);
-    for(auto e : vec)
+    QuickSort(arr, 0, arr.size()-1);
+
+    std::cout << "Sorted   Datas: ";
+    for(auto e : arr)
         std::cout << e << " ";
     std::cout << std::endl;
 

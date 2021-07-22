@@ -6,7 +6,7 @@ std::vector<int> temp;
 void MergeSort(std::vector<int> &arr, int left, int right){
     if(left >= right)
         return;
-    int mid = left + ((right - left) >> 1);
+    int mid = left + (right - left) / 2;
 
     MergeSort(arr, left, mid);
     MergeSort(arr, mid+1, right);
@@ -31,12 +31,23 @@ void MergeSort(std::vector<int> &arr, int left, int right){
 int main(){
     std::vector<int> arr;
     int num;
+
+    std::cout << "Enter    Datas: ";
     while(std::cin >> num)
         arr.push_back(num);
-    temp.resize(arr.size());
-    MergeSort(arr, 0, arr.size()-1);
+    
+    std::cout << "Original Datas: ";
     for(auto e : arr)
         std::cout << e << " ";
     std::cout << std::endl;
+
+    temp.resize(arr.size());
+    MergeSort(arr, 0, arr.size()-1);
+
+    std::cout << "Sorted   Datas: ";
+    for(auto e : arr)
+        std::cout << e << " ";
+    std::cout << std::endl;
+    
     return 0;
 }
