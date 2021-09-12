@@ -29,6 +29,8 @@ void MergeSort(std::vector<int> &arr, int left, int right){
 }
 
 int main(){
+
+    
     std::vector<int> arr;
     int num;
 
