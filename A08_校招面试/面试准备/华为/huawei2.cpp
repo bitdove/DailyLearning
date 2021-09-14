@@ -23,8 +23,25 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <climits>
 #include <algorithm>
 using namespace std;
+
+int MinSteps(vector<vector<int>>& grid, int M, int N){
+    vector<vector<int> > dp(M, vector<int>(N, INT_MAX));
+    dp[0][0] = 0;
+    for(int i = 0; i < M; ++i){
+        for(int j = 0; j < N; ++j){
+            for(int x = 1; x <= grid[i][j] && j + x < N; ++x){
+                dp[i][j+x] = min(dp[i][j+x], dp[i][j]+1);
+            }
+            for(int y = 1; y <= grid[i][j] && i + y < M; ++y){
+                dp[i+y][j] = min(dp[i+y][j], dp[i][j]+1);
+            }
+        }
+    }
+    return dp[M-1][N-1];
+}
 
 int main(){
     string str;
@@ -33,7 +50,14 @@ int main(){
     int pos = str.find(',', 0);
     M = stoi(str.substr(0,pos));
     N = stoi(str.substr(pos+1, str.size()-pos));
-    vector<vector<int>> grid(M, vector<int>(N, __INT_MAX__));
-    dp[0][0] = 0;
-    
+    vector<vector<int> > grid(M, vector<int>(N));
+    for(int i = 0; i < M; ++i){
+        for(int j = 0; j < N; ++j){
+            cin >> grid[i][j];
+        }
+    }
+
+    cout << MinSteps(grid, M, N);
+
+    return 0;
 }
