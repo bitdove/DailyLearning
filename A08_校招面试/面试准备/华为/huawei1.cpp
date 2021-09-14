@@ -25,3 +25,38 @@
         3
         第一行：节点编号，示例中编号为3的节点是最优节点
 */
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+int BestNode(vector<int>& weight, vector<int>& root, const int num){
+    int max_diff = -1;
+    int sum = 0;
+    for(int val : weight){
+        sum += val;
+    }
+    for(int i = 1; i < num; ++i){
+        max_diff = max(max_diff, abs(sum - ChildTreeSum()));
+    }
+}
+
+int main(){
+    int num = 0;
+    cin >> num;
+    vector<int> weight(num);
+    for(int i = 0; i < num; ++i){
+        cin >> weight[i];
+    }
+    vector<int> root(num);
+    while(--num){
+        int m = 0;
+        int n = 0;
+        cin >> m >> n;
+        root[n] = m; //n号节点的父节点是m号节点
+    }
+    cout << BestNode(weight, root, int num) << endl;
+    return 0;
+}
