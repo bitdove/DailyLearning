@@ -26,14 +26,11 @@
         第一行：节点编号，示例中编号为3的节点是最优节点
 */
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
-
 int BestNode(vector<int>& weight, vector<int>& root, const int num){
-    int max_diff = -1;
+    int max_diff = 0;
     int sum = 0;
     for(int val : weight){
         sum += val;
