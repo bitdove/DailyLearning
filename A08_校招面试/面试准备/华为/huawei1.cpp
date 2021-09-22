@@ -29,31 +29,76 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int BestNode(vector<int>& weight, vector<int>& root, const int num){
-    int max_diff = 0;
+struct TreeNode{
+    int id;
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int id_, int val_) : id(id_), val(val_), left(nullptr), right(nullptr) {}
+};
+
+int GetSum(TreeNode* root){
+    queue<TreeNode*> q;
+    if(root != nullptr){
+        q.push(root);
+    }
     int sum = 0;
-    for(int val : weight){
-        sum += val;
+    while(!q.empty()){
+        int size = q.size();
+        for(int i = 0; i < size; ++i){
+            TreeNode* node = q.front();
+            q.pop();
+            sum += node->val;
+            if(node->left)  q.push(node->left);
+            if(node->right) q.push(node->right);
+        }
     }
-    for(int i = 1; i < num; ++i){
-        max_diff = max(max_diff, abs(sum - ChildTreeSum()));
+    return sum;
+}
+
+int BestNode(vector<int> subsum){
+    vector<int> diff(subsum.size(), 0);
+    for(int i = 1; i < subsum.size(); ++i){
+        diff[i] = abs(subsum[0] - (subsum[0]-subsum[i]));
     }
+    int best_id = 0;
+    int max_diff = INT_MIN;
+    for(int i = 1; i < subsum.size(); ++i){
+        if(diff[i] > max_diff){
+            best_id = i;
+            max_diff = diff[i];
+        }
+    }
+    return best_id;
 }
 
 int main(){
     int num = 0;
     cin >> num;
-    vector<int> weight(num);
+    vector<TreeNode*> nodes(num);
+    int sum = 0;
     for(int i = 0; i < num; ++i){
-        cin >> weight[i];
+        int val_temp;
+        cin >> val_temp;
+        sum += val_temp;
+        TreeNode* node_temp = new TreeNode(i, val_temp);
+        nodes[i] = node_temp;
     }
-    vector<int> root(num);
-    while(--num){
-        int m = 0;
-        int n = 0;
-        cin >> m >> n;
-        root[n] = m; //n号节点的父节点是m号节点
+    for(int i = 0; i < num-1; ++i){
+        int parent, child;
+        cin >> parent >> child;
+        if(nodes[parent]->left == nullptr){
+            nodes[parent]->left = nodes[child];
+        }
+        else{
+            nodes[parent]->right = nodes[child];
+        }
     }
-    cout << BestNode(weight, root, int num) << endl;
+    vector<int> subsum(num, 0);
+    subsum[0] = sum;
+    for(int i = 1; i < num; ++i){
+        subsum[i] = GetSum(nodes[i]);
+    }
+    cout << BestNode(subsum) << endl;
     return 0;
 }
