@@ -1,6 +1,3 @@
-
-
-
 ```cpp
 struct DListNode{
     int key;
