@@ -1,8 +1,7 @@
 #include <iostream>
 #include <vector>
 
-/*
-冒泡排序:
+/*冒泡排序:
     比较相邻的元素。如果第一个比第二个大，就交换它们两个；
     对每一对相邻元素做同样的工作，从开始第一对到结尾的最后一对。这一步结束后，排在最后的元素会是所有数据中最大的数；
     针对所有的元素重复以上的步骤，除了最后一个；
@@ -22,8 +21,7 @@ void BubbleSort(std::vector<int> &nums){
     }
 }
 
-/*
-快速排序：
+/*快速排序：
     快速排序是从冒泡排序演变而来的，实际上是在冒泡排序基础上的递归分治法。
     快速排序在每一轮挑选一个基准元素，并让其他比它大的元素移动到数列一边，
     比它小的元素移动到数列的另一边，从而把数列拆解成了两个部分。
@@ -33,10 +31,11 @@ void BubbleSort(std::vector<int> &nums){
 稳定性：不稳定
 */
 void QuickSort(std::vector<int> &nums, int left, int right){
+    //终止条件
     if(left >= right){
         return;
     }
-    
+    //处理
     int i = left;
     int j = right;
     while(i < j){
@@ -45,15 +44,13 @@ void QuickSort(std::vector<int> &nums, int left, int right){
         std::swap(nums[i], nums[j]);
     }
     std::swap(nums[i], nums[left]);
-
+    
+    //递归
     QuickSort(nums, left, i - 1);
     QuickSort(nums, i + 1, right);
 }
 
-
-
-/*
-简单选择排序：
+/*简单选择排序：
     先选择一个位置作为最小元素位置
     通过遍历，将每个元素与这个选定元素做比较并更新最小元素位置
     这样结束后就找到了最小元素的位置，把它与未排序的第一个元素进行交换。
@@ -76,8 +73,47 @@ void SelectionSort(std::vector<int> &nums){
     }
 }
 
-/*
-简单插入排序：
+/*堆排序：
+    首先将等待排序的数组构造成一个类似大根堆的树，构造结束后整个数组当中的最大值就是堆结构的顶端；
+    然后将顶端的数与末尾的数交换位置，交换结束后末尾的数为最大值，剩下其他的待排序的数组个数为n-1个；
+    将剩余的n-1个数再此构造成一个类似大根堆的树，再将顶端数与n-1位置的末尾数交换位置，重复上述步骤可以最终得到一个有序数组。
+时间复杂度：O(nlogn)
+空间复杂度：O(1)
+稳定性：不稳定
+*/
+//堆调整
+void Heapify(std::vector<int>& nums, int index, int heap_size){
+    int parent_index = index;
+    int leftChild_index = 2 * parent_index + 1;
+    while(leftChild_index < heap_size){
+        int maxValue_index = leftChild_index+1 < heap_size && nums[leftChild_index+1] > nums[leftChild_index]
+                             ? leftChild_index+1 : leftChild_index;
+        maxValue_index = nums[maxValue_index] > nums[parent_index] ? maxValue_index : parent_index;
+        if(maxValue_index == parent_index)
+            return;
+        std::swap(nums[maxValue_index], nums[parent_index]);
+        parent_index = maxValue_index;
+        leftChild_index = 2 * parent_index + 1;
+    } 
+}
+//堆排序
+void HeapSort(std::vector<int>& nums){
+    if(nums.size() < 2)
+        return;
+    int heap_size = nums.size();
+
+    for(int i = heap_size/2 - 1; i >= 0; --i)
+        Heapify(nums, i, heap_size);
+
+    std::swap(nums[0], nums[--heap_size]);
+
+    while(heap_size > 0){
+        Heapify(nums, 0, heap_size);
+        std::swap(nums[0], nums[--heap_size]);
+    }
+}
+
+/*简单插入排序：
     将待排序数据看成由已排序和未排序两部分组成。
     对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
 时间复杂度：O(n^2)
@@ -97,8 +133,7 @@ void InsertSort(std::vector<int> &nums){
     }
 }
 
-/*
-二路归并排序：
+/*二路归并排序：
     归并排序采用分治策略，其本质框架是二叉树的后序遍历，左右子树的递归就是“分”，根结点的处理部分就是“治”。
 时间复杂度：O(nlogn)
 空间复杂度：O(n)
@@ -139,6 +174,7 @@ void MergeSort(std::vector<int> &nums, int left, int right){
     }
 }
 
+//测试程序
 int main(int argc, char *argv[]){
     std::vector<int> nums;
     int num;
@@ -155,8 +191,9 @@ int main(int argc, char *argv[]){
 
     //排序数组并打印
     //BubbleSort(nums); //冒泡排序
-    QuickSort(nums, 0, nums.size() - 1); //快速排序
+    //QuickSort(nums, 0, nums.size() - 1); //快速排序
     //SelectionSort(nums); //简单选择排序
+    HeapSort(nums); //堆排序
     //InsertSort(nums);  //简单插入排序
     //temp.resize(nums.size()); //归并排序
     //MergeSort(nums, 0, nums.size()-1); //归并排序

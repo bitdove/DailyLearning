@@ -9,6 +9,7 @@ struct ListNode{
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
+//迭代法反转链表
 ListNode* ReverseList(ListNode* root){
     if(root == nullptr || root->next == nullptr){
         return root;
@@ -25,6 +26,20 @@ ListNode* ReverseList(ListNode* root){
         }
     }
     return pre;
+}
+
+//递归法反转链表。单链表其实就是一叉树
+ListNode* ReverseListCur(ListNode* head){
+    //终止条件
+    if(head == nullptr || head->next == nullptr){
+        return head;
+    }
+    //递归调用
+    ListNode* ret = ReverseListCur(head->next);
+    //遍历
+    head->next->next = head;
+    head->next = nullptr;
+    return ret;
 }
 
 int main(int argc, char *argv[]){
@@ -45,7 +60,8 @@ int main(int argc, char *argv[]){
     std::cout << std::endl;
     
     //反转链表并打印
-    curr = ReverseList(dummy->next);
+    curr = ReverseList(dummy->next); //迭代反转
+    //curr = ReverseListCur(dummy->next); //递归反转
     std::cout << "反转链表：";
     while(curr){
         std::cout << curr->val << " ";
