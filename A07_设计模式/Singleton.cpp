@@ -7,7 +7,6 @@ class Singleton_1{
 public:
     static Singleton_1* GetSingletonObject(){
         if(m_singleton_object == nullptr){
-            sleep(2);//为了测试Singleton_1在多线程下可能创建多个实例
             m_singleton_object = new Singleton_1();
         }
         return m_singleton_object;
